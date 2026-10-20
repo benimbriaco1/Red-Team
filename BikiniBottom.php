@@ -6,7 +6,7 @@
 <!-- This marks the start of the head section - contain metadata not directly visible to user-->
 <head>
     <!-- The title tag is used to define the title of a web page -->
-    <title>Command Interface</title>
+    <title>IIS Blue Team Inject</title>
     <!-- The style tag is used for CSS. CSS is used in this to align with the theme of the competition-->
     <style>
         /* 
