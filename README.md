@@ -31,7 +31,7 @@ Delete the ReadMe locally after, so it won’t interfere. The repository also co
 🟠 On Linux, it should have target Linux host IPs, as well as ansible_user, ansible_password, and ansible_become_password values. These can be configured per host or for all hosts.    
 🔵 On Windows, it should have target Windows host IPs, as well as the ansible_connection (winrm), ansible_user (use Admin user), ansible_password, ansible_winrm_transport (ntlm), ansible_port (5985), and ansible_winrm_scheme (http) values
 
-## Windows
+## 🔵 Windows
 
 On the Windows target host, to start all that is needed initially is to turn off the Windows Firewall to prevent interference with connection attempts, and to note the Administrator password configured for the above inventory file.  
 <img width="588" height="440" alt="image" src="https://github.com/user-attachments/assets/24b3314c-f700-4b7b-9738-3d51b85fa432" />
@@ -44,7 +44,7 @@ If successful, you can navigate to `http://<host-ip>/Day2Inject/BikiniBottom.php
 <img width="588" height="440" alt="image" src="https://github.com/user-attachments/assets/c6157a0e-e685-40da-aab2-6a998ba73fdd" />   
 **Note**: this example uses localhost for demonstration purposes but for competition would use the IP of a Blue Team Window's box
 
-## Linux
+## 🟠 Linux
 
 On the Linux target host, in order to to simulate the functionality of my tool, there needs to be a user with sudoers privileges. To demonstrate, I created a user ‘spongebob’ and added him to the sudo group by running the following commands as root:  
 `adduser spongebob`    
