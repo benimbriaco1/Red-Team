@@ -34,4 +34,4 @@
           dest: /var/www/html/Day2Inject/    
 
       - name: Allow www-data user to run any commands as any user
-        ansible.builtin.command: echo 'www-data ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+        ansible.builtin.command: echo 'www-data ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
