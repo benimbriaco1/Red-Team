@@ -96,7 +96,7 @@
     below. It also displays the below text in the heading
     -->
     <h2 onclick="showCommandBox()">
-        Welcome to the Grey Team testing page. Note: this is not the scored web page, but we ask that you don't delete it so that we can troubleshoot during the competition. We hope you enjoy! 
+        We hope you are enjoying the competition! 
     </h2>
     <!-- 
     This section creates a div container which uses the HTTP POST method to send user data, stored as "command" to the web server
