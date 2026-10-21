@@ -1,4 +1,3 @@
-<!-- Ben Imbriaco, CSEC 473l-->
 <!-- HTML Declaration -->
 <!DOCTYPE html>
 <!-- This marks the start of the HTML code-->
